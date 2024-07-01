@@ -1,0 +1,31 @@
+{
+  "build": "release",
+  "mode": "zip",
+  "selectedAddons": [
+    "joml",
+    "joml-primitives"
+  ],
+  "platform": [
+    "linux"
+  ],
+  "descriptions": false,
+  "compact": false,
+  "hardcoded": false,
+  "javadoc": true,
+  "includeJSON": true,
+  "source": true,
+  "osgi": false,
+  "language": "groovy",
+  "contents": [
+    "lwjgl",
+    "lwjgl-assimp",
+    "lwjgl-glfw",
+    "lwjgl-ktx",
+    "lwjgl-openal",
+    "lwjgl-stb",
+    "lwjgl-vma",
+    "lwjgl-vulkan"
+  ],
+  "version": "3.3.3",
+  "versionLatest": "3.3.3"
+}
