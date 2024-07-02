@@ -138,14 +138,14 @@ public class GameWindow
         {
             while (!glfwWindowShouldClose(window))
             {
+                glfwSwapBuffers(window);
+                glfwPollEvents();
                 try
                 {
                     for(WindowEvent e : windowEvents)
                     {
                         e.onRefresh();
                     }
-                    glfwSwapBuffers(window);
-                    glfwPollEvents();
                 }
                 catch(ConcurrentModificationException e)
                 {

@@ -40,6 +40,8 @@ public class FrameRenderer
     //int currentImageIndex = 0;
     //boolean isFrameStarted = false;
 
+    public int MAX_FRAMES_IN_FLIGHT;
+
     Viewport view = new Viewport(); //TODO move Viewport to Vulkan!!!
 
     public FrameRenderer(Device d, GameWindow w)
@@ -47,6 +49,7 @@ public class FrameRenderer
         dev = d;
         window = w;
         chain = new Swapchain(dev, window.getSize());
+        MAX_FRAMES_IN_FLIGHT = chain.getImageCount();
         createCommandBuffers();
     }
 
@@ -59,7 +62,7 @@ public class FrameRenderer
     {
         try(MemoryStack stack = stackPush())
         {
-            commandBuffers = PointerBuffer.allocateDirect(Swapchain.MAX_FRAMES_IN_FLIGHT);
+            commandBuffers = PointerBuffer.allocateDirect(MAX_FRAMES_IN_FLIGHT);
 
             VkCommandBufferAllocateInfo allocInfo = VkCommandBufferAllocateInfo.callocStack(stack);
             allocInfo.sType              ( VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO );
@@ -185,7 +188,7 @@ public class FrameRenderer
                 throw e;
             }
 
-            currentFrameIndex = (currentFrameIndex + 1) % Swapchain.MAX_FRAMES_IN_FLIGHT;
+            currentFrameIndex = (currentFrameIndex + 1) % MAX_FRAMES_IN_FLIGHT;
         }
     }
 

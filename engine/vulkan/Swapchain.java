@@ -34,7 +34,7 @@ import engine.VkResultDecoder;
 
 public class Swapchain
 {
-    static int MAX_FRAMES_IN_FLIGHT = 5;
+    public int MAX_FRAMES_IN_FLIGHT = 2;
 
     long pSwapchain;
     long pRenderpass;
@@ -101,6 +101,8 @@ public class Swapchain
         {
             imageCount = swapChainSupport.capabilities.maxImageCount();
         }
+
+        MAX_FRAMES_IN_FLIGHT = imageCount;
         
         try(MemoryStack stack = stackPush())
         {

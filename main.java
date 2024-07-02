@@ -28,6 +28,18 @@ public class main
         RotationSystem.init();
 
         System.err.println("main ready");
+
+        while (true)
+        {
+            try
+            {
+                Thread.sleep(10);
+            }
+            catch (InterruptedException e)
+            {
+                e.printStackTrace();
+            }            
+        }
     }
 
 }

@@ -156,7 +156,7 @@ public class Vulkan
     public void createCompatibleGLFWWindow(int x, int y)
     {
 
-        w = new GameWindow("AnotherStar");
+        w = new GameWindow("Chess");
         w.setSize(600, 480);
         w.new WindowEvent()
         {
@@ -181,7 +181,8 @@ public class Vulkan
                 try
                 {
                     Thread.sleep(100);
-                } catch (InterruptedException e)
+                }
+                catch (InterruptedException e)
                 {}
                 System.exit(0);
             }
@@ -190,7 +191,6 @@ public class Vulkan
             {
                 System.out.println("Resize");
                 windowResizedFlag = true;
-                //renderFrame();
             }
         };
 

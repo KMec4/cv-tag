@@ -62,14 +62,14 @@ public class Schachbrett extends GameObject //implements RenderSystemI3d
         brett[7][6] = new Springer  (this, false).setPosition(7, 6);
         brett[7][7] = new Turm      (this, false).setPosition(7, 7);
 
-        //brett[6][0] = new Bauer     (this, true).setPosition(6, 0);
-        //brett[6][1] = new Bauer     (this, true).setPosition(6, 1);
-        //brett[6][2] = new Bauer     (this, true).setPosition(6, 2);
-        //brett[6][3] = new Bauer     (this, true).setPosition(6, 3);
-        //brett[6][4] = new Bauer     (this, true).setPosition(6, 4);
-        //brett[6][5] = new Bauer     (this, true).setPosition(6, 5);
-        //brett[6][6] = new Bauer     (this, true).setPosition(6, 6);
-        //brett[6][7] = new Bauer     (this, true).setPosition(6, 7);
+        brett[6][0] = new Bauer     (this, false).setPosition(6, 0);
+        brett[6][1] = new Bauer     (this, false).setPosition(6, 1);
+        brett[6][2] = new Bauer     (this, false).setPosition(6, 2);
+        brett[6][3] = new Bauer     (this, false).setPosition(6, 3);
+        brett[6][4] = new Bauer     (this, false).setPosition(6, 4);
+        brett[6][5] = new Bauer     (this, false).setPosition(6, 5);
+        brett[6][6] = new Bauer     (this, false).setPosition(6, 6);
+        brett[6][7] = new Bauer     (this, false).setPosition(6, 7);
     }
 
     public void selectFieldByCord(float x, float y)
