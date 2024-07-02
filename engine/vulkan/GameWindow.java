@@ -32,16 +32,31 @@ public class GameWindow
 
     public GameWindow(String title)
     {
+        this.title = title;
+        new WindowEventProcess().start();
+        try
+        {
+            Thread.sleep(100); // Wait for the Window to be initialized
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+        glfwMakeContextCurrent(window);
+    }
+
+    private void createWindow()
+    {
         glfwInit();
+
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
         glfwWindowHint(GLFW_CURSOR, GLFW_CROSSHAIR_CURSOR);
-        glfwWindowHint(GLFW_REFRESH_RATE, 1);
+        //glfwWindowHint(GLFW_REFRESH_RATE, 1);
 
         window = glfwCreateWindow(width, height, title, 0L, 0L);
 
         glfwSetFramebufferSizeCallback(window, new WindowResizeEvent());
-        new WindowEventProcess().start();
     }
 
     public void setSize(int x, int y)
@@ -126,6 +141,10 @@ public class GameWindow
 
     private class WindowEventProcess extends Thread
     {
+        public WindowEventProcess()
+        {
+            super("WindowEventProcess");
+        }
         private void onClose()
         {
             for(WindowEvent e : windowEvents)
@@ -136,8 +155,10 @@ public class GameWindow
         @Override
         public void run()
         {
+            createWindow();
             while (!glfwWindowShouldClose(window))
             {
+                glfwMakeContextCurrent(window);
                 glfwSwapBuffers(window);
                 glfwPollEvents();
                 try
