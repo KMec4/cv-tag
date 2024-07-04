@@ -6,7 +6,9 @@ Es ist ein Schachspiel, was 3Dimensional gerendert wird.
 ## Screenshots
 ![Bild von der Szene](.screenshots/Szene.png)
 
-## USAGE
+## Usage
 - Download this Repository
-- add all .jar in the lib subdirs
+- add all .jar in the lib subdirs to classpath
 - execute main.java
+- you can move with W and S and look around with the arrow keys
+- select chessman with enter

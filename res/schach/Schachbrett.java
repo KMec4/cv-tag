@@ -1,5 +1,7 @@
 package res.schach;
 
+import java.io.File;
+
 import org.joml.Vector3f;
 
 import engine._3d.Vertex;
@@ -17,59 +19,68 @@ import engine._3d.RenderSystemI3d;
 
 public class Schachbrett extends GameObject //implements RenderSystemI3d
 {
-    private Spielfigur[][] brett = new Spielfigur[8][8];
-    private boolean[][] canMove = new boolean[8][8];
+    private Field[][] brett = new Field[8][8];
+    private Field selectedField;
 
     public final float FIELD_LEN = 20.f;
-    private int sfx = -1, sfy = -1;
 
     Vector3f pos = new Vector3f(-60.0f, 40.0f, 20.0f);
 
+    public static final Vector3f COLOR_SELECTED = new Vector3f( .0f, 1.f, .0f);
+    public static final Vector3f COLOR_TARGET = new Vector3f( .75f, .0f, .0f);;
+    public static final Vector3f COLOR_MOVEABLE = new Vector3f( .0f, .0f, .125f);
+
     public Schachbrett()
     {
-        restoreDefault();
-
         generateField(new Vector3f( .75f, .5f, .25f ), new Vector3f(1.f, 1.f, 1.f));
-        //generateField(new Vector3f( .75f, .5f, .25f ), new Vector3f(1.f, 1.f, 1.f));
+        restoreDefault();
     }
     
     public void restoreDefault()
     {
-        brett[0][0] = new Turm      (this, true).setPosition(0, 0);
-        brett[0][1] = new Springer  (this, true).setPosition(0, 1);
-        brett[0][2] = new Laufer    (this, true).setPosition(0, 2);
-        brett[0][3] = new Dame      (this, true).setPosition(0, 3);
-        brett[0][4] = new Konig     (this, true).setPosition(0, 4);
-        brett[0][5] = new Laufer    (this, true).setPosition(0, 5);
-        brett[0][6] = new Springer  (this, true).setPosition(0, 6);
-        brett[0][7] = new Turm      (this, true).setPosition(0, 7);
+        for(Field[] row : brett) // punsh all still standing chessman
+        {
+            for(Field f : row)
+            {
+                f.punsh();
+            }
+        }
 
-        brett[1][0] = new Bauer     (this, true).setPosition(1, 0);
-        brett[1][1] = new Bauer     (this, true).setPosition(1, 1);
-        brett[1][2] = new Bauer     (this, true).setPosition(1, 2);
-        brett[1][3] = new Bauer     (this, true).setPosition(1, 3);
-        brett[1][4] = new Bauer     (this, true).setPosition(1, 4);
-        brett[1][5] = new Bauer     (this, true).setPosition(1, 5);
-        brett[1][6] = new Bauer     (this, true).setPosition(1, 6);
-        brett[1][7] = new Bauer     (this, true).setPosition(1, 7);
+        brett[0][0].setChessman(new Turm      (this, true));
+        brett[0][1].setChessman(new Springer  (this, true));
+        brett[0][2].setChessman(new Laufer    (this, true));
+        brett[0][3].setChessman(new Dame      (this, true));
+        brett[0][4].setChessman(new Konig     (this, true));
+        brett[0][5].setChessman(new Laufer    (this, true));
+        brett[0][6].setChessman(new Springer  (this, true));
+        brett[0][7].setChessman(new Turm      (this, true));
 
-        brett[7][0] = new Turm      (this, false).setPosition(7, 0);
-        brett[7][1] = new Springer  (this, false).setPosition(7, 1);
-        brett[7][2] = new Laufer    (this, false).setPosition(7, 2);
-        brett[7][3] = new Dame      (this, false).setPosition(7, 3);
-        brett[7][4] = new Konig     (this, false).setPosition(7, 4);
-        brett[7][5] = new Laufer    (this, false).setPosition(7, 5);
-        brett[7][6] = new Springer  (this, false).setPosition(7, 6);
-        brett[7][7] = new Turm      (this, false).setPosition(7, 7);
+        brett[1][0].setChessman(new Bauer     (this, true));
+        brett[1][1].setChessman(new Bauer     (this, true));
+        brett[1][2].setChessman(new Bauer     (this, true));
+        brett[1][3].setChessman(new Bauer     (this, true));
+        brett[1][4].setChessman(new Bauer     (this, true));
+        brett[1][5].setChessman(new Bauer     (this, true));
+        brett[1][6].setChessman(new Bauer     (this, true));
+        brett[1][7].setChessman(new Bauer     (this, true));
 
-        brett[6][0] = new Bauer     (this, false).setPosition(6, 0);
-        brett[6][1] = new Bauer     (this, false).setPosition(6, 1);
-        brett[6][2] = new Bauer     (this, false).setPosition(6, 2);
-        brett[6][3] = new Bauer     (this, false).setPosition(6, 3);
-        brett[6][4] = new Bauer     (this, false).setPosition(6, 4);
-        brett[6][5] = new Bauer     (this, false).setPosition(6, 5);
-        brett[6][6] = new Bauer     (this, false).setPosition(6, 6);
-        brett[6][7] = new Bauer     (this, false).setPosition(6, 7);
+        brett[7][0].setChessman(new Turm      (this, false));
+        brett[7][1].setChessman(new Springer  (this, false));
+        brett[7][2].setChessman(new Laufer    (this, false));
+        brett[7][3].setChessman(new Dame      (this, false));
+        brett[7][4].setChessman(new Konig     (this, false));
+        brett[7][5].setChessman(new Laufer    (this, false));
+        brett[7][6].setChessman(new Springer  (this, false));
+        brett[7][7].setChessman(new Turm      (this, false));
+
+        brett[6][0].setChessman(new Bauer     (this, false));
+        brett[6][1].setChessman(new Bauer     (this, false));
+        brett[6][2].setChessman(new Bauer     (this, false));
+        brett[6][3].setChessman(new Bauer     (this, false));
+        brett[6][4].setChessman(new Bauer     (this, false));
+        brett[6][5].setChessman(new Bauer     (this, false));
+        brett[6][6].setChessman(new Bauer     (this, false));
+        brett[6][7].setChessman(new Bauer     (this, false));
     }
 
     public void selectFieldByCord(float x, float y)
@@ -82,43 +93,43 @@ public class Schachbrett extends GameObject //implements RenderSystemI3d
 
     public void selectField(int x, int y)
     {
-        int sfxN = x;
-        int sfyN = y;
+        System.out.println("Selected Cord: [ " + x + " , " + y + " ]");
 
-        if(sfx > -1 && brett[sfx][sfy] != null) // alte Spielfigur zurücksetzen
+        if(x > brett.length || x < 0 || y > brett[0].length || y < 0) // ist Feld außerhalb?
         {
-            brett[sfx][sfy].resetColor();
-        }
-
-        if(sfxN > brett.length || sfxN < 0 || sfyN > brett[0].length || sfyN < 0) // sollte neues Feld außerhalb liegen, wird das alte abgewählt
-        {
-            sfx = -1;
-            sfy = -1;
-            return;
-        }
-
-        if(sfx > -1 && canMove[sfxN][sfyN]) // neue figur auswählen und bewegen
-        {
-
-            if(brett[sfxN][sfyN] != null) // figuren schlagen
+            if(selectedField != null)
             {
-                brett[sfxN][sfyN].punsh();
+                selectedField.setMove(null);
             }
-            brett[sfxN][sfyN] = brett[sfx][sfy].setPosition(sfxN, sfyN);
-            brett[sfx][sfy] = null;
-            clearMovOptions();
+            selectedField = null; //kein Feld Ausgewählt
         }
-        else
+        else // Figur innerhalb
         {
-            if(brett[sfxN][sfyN] != null) // figur auswälen
+            if(brett[x][y].canMove()) // ist das Feld begehbar?
             {
-                brett[sfxN][sfyN].color.add(.0f, 1.f, .0f);
-                sfx = sfxN;
-                sfy = sfyN;
-                showMovOptions();
+                brett[x][y].setChessman(selectedField.getChessman()); //Spielfigur bewegen
+                selectedField.setChessman(null);
+                selectedField = brett[x][y];
+            }
+            else // kann das Feld nicht betreten
+            {
+                if(selectedField != null)
+                {
+                    selectedField.setMove(null); // das Feld wurde abgewählt
+                }
+                if(brett[x][y].getChessman() != null) // steht dort jemand
+                {
+                    selectedField = brett[x][y];
+                    selectedField.setSelected();
+                }
+                else
+                {
+                    selectedField = null; //kein Feld Ausgewählt
+                }
             }
         }
-        
+
+        showMovOptions();
     }
 
     private void clearMovOptions()
@@ -127,92 +138,72 @@ public class Schachbrett extends GameObject //implements RenderSystemI3d
         {
             for(int j = 0; j < 8; j++)
             {
-                canMove[i][j] = false;
+                brett[i][j].setMove(null);
             }
         }
     }
 
     private void showMovOptions()
     {
-        if(brett[sfx][sfy] != null)
+        if(selectedField != null)
         {
-            boolean[][] posible = brett[sfx][sfy].getTeamMov();
+            if(selectedField.getChessman() == null)
+            {
+                return;
+            }
+            boolean[][] posible = selectedField.getChessman().getTeamMov();
+
+            int xField = selectedField.x;
+            int yField = selectedField.y;
 
             for(int i = 0; i < 8; i++)
             {
                 for(int j = 0; j < 8; j++)
                 {
-                    int x = i - sfx + (posible.length / 2);
-                    int y = j - sfy + (posible[0].length / 2);
+                    int x = i - xField + (posible.length / 2);
+                    int y = j - yField + (posible[0].length / 2);
                     if(x >= 0 && x < posible.length && y >= 0 && y < posible[0].length)
                     {
-                        canMove[i][j] = posible[x][y];
+                        if(posible[x][y])
+                        {
+                            brett[i][j].setMove(selectedField.getChessman());
+                        }
+                        else
+                        {
+                            brett[i][j].setMove(null);
+                        }
                     }
                     else
                     {
-                        canMove[i][j] = false;
+                        brett[i][j].setMove(null);
                     }
-                    
-                    if(canMove[i][j] && brett[i][j] != null)
-                    {
-                        System.out.print(" X");
-                    }
-                    else if (canMove[i][j])
-                    {
-                        System.out.print( " #");
-                    }
-                    else if ( brett[i][j] != null )
-                    {
-                        System.out.print(" S");
-                    }
-                    else
-                    {
-                        System.out.print(" O");
-                    }
-                    
                 }
-                System.out.println();
             }
         }
+        else
+        {
+            clearMovOptions();
+        }
     }
-
-    // 3D stuff________________________________________________________________________
     
-    Model3d model;
-
-    //@Override
     public Vector3f translation()
     {
         return pos;
     }
 
-    //@Override
     public Vector3f scale()
     {
         return new Vector3f(FIELD_LEN, 1.0f, FIELD_LEN);
     }
 
-    //@Override
     public Vector3f rotation()
     {
         return new Vector3f(.0f, .0f, .0f);
     }
 
-    //@Override
-    public Vector3f color()
-    {
-        return new Vector3f(1.0f, 1.0f, 1.0f);
-    }
-
-    //@Override
-    public Model3d model()
-    {
-        return model;
-    }
-
     public void generateField(Vector3f c0, Vector3f c1)
     {
-        Vertex[] data = new Vertex[6]; //[8*8*6];
+        Vertex[] data = new Vertex[6];
 
         boolean switchC = false;
         int vIndex = 0;
@@ -243,7 +234,6 @@ public class Schachbrett extends GameObject //implements RenderSystemI3d
                 p2.sub(p1, U);
                 p3.sub(p1, V);
 
-
                 Vector3f normal = new Vector3f(
                 ( (U.y() * V.z()) - (U.z() * V.y()) ),
                 ( (U.z() * V.x()) - (U.x() * V.z()) ),
@@ -257,7 +247,7 @@ public class Schachbrett extends GameObject //implements RenderSystemI3d
                 data[ vIndex++ ] = new Vertex( new Vector3f( (float) i + .5f, 0.0f, (float) j - .5f), color, normal);
                 data[ vIndex++ ] = new Vertex( new Vector3f( (float) i + .5f, 0.0f, (float) j + .5f), color, normal);
 
-                new Field(this, data, i, j);
+                brett[i][j] = new Field(this, data, i, j);
                 vIndex = 0;
             }
             switchC = !switchC;
@@ -267,19 +257,122 @@ public class Schachbrett extends GameObject //implements RenderSystemI3d
     static class Field extends GameObject implements RenderSystemI3d, PickSystemI
     {
         Schachbrett sch;
-        Model3d model3d;
-        Vector3f c;
+        Spielfigur figur;
+
+        boolean target = false, selected = false, moveable = false;
         int x = 0, y = 0;
+
+        Model3d model3d;
+        Vector3f color;
 
         public Field(Schachbrett brett, Vertex[] data, int x, int y)
         {
             super();
             sch = brett;
             model3d = new Model3d(RenderSystem3d.getDevice(), data);
-            c = new Vector3f(1.f, 1.f, 1.f);
+            color = new Vector3f(1.f, 1.f, 1.f);
             this.x = x;
             this.y = y;
         }
+
+        public void setChessman(Spielfigur spf)
+        {
+            if(spf != null)
+            {
+                if(figur != null)
+                {
+                    punsh();
+                }
+                spf.setPosition(x, y);
+                figur = spf;
+            }
+            else
+            {
+                figur = null;
+            }
+            setColor();
+        }
+
+        public Spielfigur getChessman()
+        {
+            return figur;
+        }
+
+        public void setSelected(boolean isSelected)
+        {
+            selected = isSelected;
+            setColor();
+        }
+
+        public void setTarget(boolean isTarget)
+        {
+            target = isTarget;
+            setColor();
+        }
+
+        public void punsh()
+        {
+            if(figur != null)
+            {
+                figur.resetColor();
+                figur.punsh();
+                figur = null;
+            }
+        }
+
+        public boolean canMove()
+        {
+            return selected || target || moveable;
+        }
+
+        /**
+         * Sets the fields properties to this specific situation
+         * @param actor if actor == null, all is reseted
+         *              if actor == the figur standing on this field, it is selected
+         */
+        public void setMove(Spielfigur actor)
+        {
+            if(actor == null)
+            {
+                selected = false;
+                target = false;
+                moveable = false;
+            }
+            else if(figur == null)
+            {
+                selected = false;
+                target = false;
+                moveable = true;
+            }
+            else if(actor == figur)
+            {
+                selected = true;
+                target = false;
+                moveable = false;
+            }
+            else if(actor.getTeam() == figur.getTeam())
+            {
+                selected = false;
+                target = false;
+                moveable = false;
+            }
+            else
+            {
+                selected = false;
+                target = true;
+                moveable = false;
+            }
+            setColor();
+        }
+
+        public void setSelected()
+        {
+            selected = true;
+            target = false;
+            setColor();
+        }
+        
+    // 3D stuff________________________________________________________________________
 
         @Override
         public Vector3f translation()
@@ -302,7 +395,7 @@ public class Schachbrett extends GameObject //implements RenderSystemI3d
         @Override
         public Vector3f color()
         {
-            return c;
+            return color;
         }
 
         @Override
@@ -311,18 +404,42 @@ public class Schachbrett extends GameObject //implements RenderSystemI3d
             return model3d;
         }
 
-        public void setColor(Vector3f color)
-        {
-            this.c = color;
-        }
-
         @Override
         public void picked()
         {
-            System.out.println("Selected Cord: [ " + x + " , " + y + " ]");
             sch.selectField(x, y);
         }
-        
-    }
 
+        private void setColor()
+        {
+            color.set(1f);
+            if(selected)
+            {
+                if(figur != null)
+                {
+                    figur.color.add(COLOR_SELECTED);
+                }
+                color.mul(COLOR_SELECTED);
+            }
+            else if(target)
+            {
+                if(figur != null)
+                {
+                    figur.color.add(COLOR_TARGET);
+                }
+                color.mul(COLOR_TARGET);
+            }
+            else if(moveable)
+            {
+                color.mul(COLOR_MOVEABLE);
+            }
+            else
+            {
+                if(figur != null)
+                {
+                    figur.resetColor();
+                }
+            }
+        }
+    }
 }

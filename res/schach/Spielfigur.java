@@ -42,6 +42,11 @@ public abstract class Spielfigur extends GameObject implements RenderSystemI3d, 
         scale = new Vector3f(1f, 1f,1f);
     }
 
+    public boolean getTeam()
+    {
+        return teamW;
+    }
+
     public abstract boolean[][] getMov(); // x und y sind ungerade, da die mitte die Figur ist!;
 
     public boolean[][] getTeamMov()
